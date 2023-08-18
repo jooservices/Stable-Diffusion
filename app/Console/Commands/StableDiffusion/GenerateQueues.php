@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\StableDiffusion;
 
-use App\Jobs\GenerateTxt2Img;
+use App\Models\Queue;
 use App\Services\StableDiffusionService;
 use Illuminate\Console\Command;
 
-class StableDiffusion extends Command
+class GenerateQueues extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'stable-diffusion:generate';
+    protected $signature = 'stable-diffusion:generate {--prompt=}';
 
     /**
      * The console command description.
@@ -28,9 +28,15 @@ class StableDiffusion extends Command
     public function handle()
     {
         $models = app(StableDiffusionService::class)->models();
+
         foreach ($models as $model)
         {
-            GenerateTxt2Img::dispatch($model);
+            Queue::create([
+                'prompt' => $this->option('prompt'),
+                'override_settings' => [
+                    'sd_model_checkpoint' => $model,
+                ]
+            ]);
         }
     }
 }

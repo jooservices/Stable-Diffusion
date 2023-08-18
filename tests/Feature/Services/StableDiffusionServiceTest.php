@@ -12,8 +12,6 @@ class StableDiffusionServiceTest extends TestCase
     public function testText2Image()
     {
         $service = app(Txt2ImgService::class);
-        $service->prompt->add('deep inside pussy');
-
-        dd($service->generate());
+        $service->generate();
     }
 }

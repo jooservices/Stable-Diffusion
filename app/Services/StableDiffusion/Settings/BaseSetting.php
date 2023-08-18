@@ -6,6 +6,13 @@ class BaseSetting implements SettingInterface
 {
     protected array $settings = [];
 
+    public function loadFromArray(array $settings): SettingInterface
+    {
+        $this->settings = array_merge($this->settings, $settings);
+
+        return $this;
+    }
+
     public function set(string $key, mixed $value): SettingInterface
     {
         $this->settings[$key] = $value;

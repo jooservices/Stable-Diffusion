@@ -22,28 +22,28 @@ class Payload extends BaseSetting
             'save_images' => false,
             'steps' => 150,
             'restore_faces' => true,
-            'cfg_scale_type' => 6.5,
+            'cfg_scale' => 6.5,
             'enable_hr' => true,
             'hr_upscaler' => 'Latent',
             'denoising_strength' => 0.35,
         ];
     }
 
-    public function setPrompt(PromptInterface $prompt)
+    public function setPrompt(PromptInterface $prompt): self
     {
         $this->set('prompt', $prompt->toString());
 
         return $this;
     }
 
-    public function setNegativePrompt(PromptInterface $prompt)
+    public function setNegativePrompt(PromptInterface $prompt): self
     {
         $this->set('negative_prompt', $prompt->toString());
 
         return $this;
     }
 
-    public function setSteps(int $steps)
+    public function setSteps(int $steps): self
     {
         if ($steps > 150) {
             $steps = 150;
@@ -56,56 +56,56 @@ class Payload extends BaseSetting
         return $this;
     }
 
-    public function enableHr()
+    public function enableHr(): self
     {
         $this->enable('enable_hr');
 
         return $this;
     }
 
-    public function disableHr()
+    public function disableHr(): self
     {
         $this->disable('enable_hr');
 
         return $this;
     }
 
-    public function enableRestoreFaces()
+    public function enableRestoreFaces(): self
     {
         $this->enable('restore_faces');
 
         return $this;
     }
 
-    public function disableRestoreFaces()
+    public function disableRestoreFaces(): self
     {
         $this->disable('restore_faces');
 
         return $this;
     }
 
-    public function enableSendImages()
+    public function enableSendImages(): self
     {
         $this->enable('send_images');
 
         return $this;
     }
 
-    public function disableSendImages()
+    public function disableSendImages(): self
     {
         $this->disable('send_images');
 
         return $this;
     }
 
-    public function enableSaveImages()
+    public function enableSaveImages(): self
     {
         $this->enable('save_images');
 
         return $this;
     }
 
-    public function disableSaveImages()
+    public function disableSaveImages(): self
     {
         $this->disable('save_images');
 

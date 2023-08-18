@@ -44,7 +44,7 @@ class SdApi
 
     public function progress()
     {
-        return $this->client->get('progress?skip_current_image=true');
+        return $this->client->get(self::SD_API_URL . 'progress?skip_current_image=true');
     }
 
     public function isCompleted(): bool
