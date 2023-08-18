@@ -14,28 +14,41 @@ class SdApi
     {
     }
 
-    public function get(string $endpoint): array
+    public function get(string $endpoint): ?\stdClass
     {
-        return $this->client->get(self::SD_API_URL . $endpoint);
+        $this->client->get(self::SD_API_URL . $endpoint);
+
+        return $this->client->getData();
     }
 
-    public function post(string $endpoint, Payload $payload, ?OverrideSetting $overrideSetting)
+    public function post(string $endpoint, Payload $payload, ?OverrideSetting $overrideSetting): ?\stdClass
     {
-        return $this->client->post(
+        $this->client->post(
             self::SD_API_URL . $endpoint,
             $payload,
             $overrideSetting
         );
+
+        return $this->client->getData();
     }
 
-    public function isCompleted()
+    public function txt2img(Payload $payload, ?OverrideSetting $overrideSetting): ?\stdClass
     {
-        $respond = $this->client->get('progress?skip_current_image=true');
+        return $this->post('txt2img', $payload, $overrideSetting);
+    }
 
-        if ($respond->progress === 0.0) {
-            return true;
-        }
+    public function options(): ?\stdClass
+    {
+        return $this->get('options');
+    }
 
-        return $respond;
+    public function progress()
+    {
+        return $this->client->get('progress?skip_current_image=true');
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->progress()->progress === 0.0;
     }
 }

@@ -6,81 +6,27 @@ use App\Services\StableDiffusion\APIs\SdApi;
 use App\Services\StableDiffusion\Prompts\Prompt;
 use App\Services\StableDiffusion\Settings\OverrideSetting;
 use App\Services\StableDiffusion\Settings\Payload;
+use stdClass;
 
 class Txt2ImgService implements GeneratorInterface
 {
     public function __construct(
         private SdApi $client,
-        private Prompt $prompt,
-        private Prompt $negativePrompt,
+        public Prompt $prompt,
+        public Prompt $negativePrompt,
+        private Payload $payload,
+        private OverrideSetting $overrideSetting,
     )
     {
+        $this->prompt->loadFromFile('stable-diffusion/prompts');
+        $this->negativePrompt->loadFromFile('stable-diffusion/negative_prompts');
     }
 
-    public function loadPromptFromFile(string $path = 'stable-diffusion/prompts'): self
+    public function generate(): ?stdClass
     {
-        $this->prompt->loadFromFile($path);
+        $this->payload->setPrompt($this->prompt);
+        $this->payload->setNegativePrompt($this->negativePrompt);
 
-        return $this;
-    }
-
-    public function addPrompt(string $prompt): self
-    {
-        $this->prompt->add(trim($prompt));
-
-        return $this;
-    }
-
-    public function addPrompts(string $prompts): self
-    {
-        $prompts = explode(',', $prompts);
-        foreach ($prompts as $prompt)
-        {
-            $this->addPrompt($prompt);
-        }
-
-        return $this;
-    }
-
-    public function loadNegativePromptFromFile(string $path ='stable-diffusion/negative_prompts'): self
-    {
-        $this->negativePrompt->loadFromFile($path);
-
-        return $this;
-    }
-
-    public function addNegativePrompt(string $prompt): self
-    {
-        $this->negativePrompt->add($prompt);
-
-        return $this;
-    }
-
-    public function addNegativePrompts(string $prompts): self
-    {
-        $prompts = explode(',', $prompts);
-        foreach ($prompts as $prompt)
-        {
-            $this->negativePrompt->add($prompt);
-        }
-
-        return $this;
-    }
-
-    public function generate(?Payload $payload = null, ?OverrideSetting $overrideSetting = null): array
-    {
-        if (!$payload) {
-            $payload = app(Payload::class);
-            $payload->loadDefault();
-        }
-
-        if (!$overrideSetting) {
-            $overrideSetting = app(OverrideSetting::class);
-        }
-
-        $payload->setPrompt($this->prompt);
-        $payload->setNegativePrompt($this->negativePrompt);
-
-        return $this->client->post('txt2img', $payload, $overrideSetting);
+        return $this->client->txt2img($this->payload, $this->overrideSetting);
     }
 }

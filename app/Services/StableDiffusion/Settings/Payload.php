@@ -6,6 +6,11 @@ use App\Services\StableDiffusion\Prompts\PromptInterface;
 
 class Payload extends BaseSetting
 {
+    public function __construct()
+    {
+        $this->loadDefault();
+    }
+
     public function loadDefault()
     {
         $this->settings = [
@@ -13,8 +18,8 @@ class Payload extends BaseSetting
             'seed' => -1,
             'width' => 768,
             'height' => 768,
-            'send_images' => false,
-            'save_images' => true,
+            'send_images' => true,
+            'save_images' => false,
             'steps' => 150,
             'restore_faces' => true,
             'cfg_scale_type' => 6.5,

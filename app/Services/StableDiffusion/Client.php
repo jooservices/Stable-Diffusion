@@ -9,13 +9,13 @@ class Client
 {
     private string $response;
 
-    private $data;
+    private ?\stdClass $data;
 
     public function __construct(private \GuzzleHttp\Client $client)
     {
     }
 
-    public function post(string $endpoint, Payload $payload, ?OverrideSetting $overrideSetting = null)
+    public function post(string $endpoint, Payload $payload, ?OverrideSetting $overrideSetting = null): ?\stdClass
     {
         if ($overrideSetting) {
             $payload->overrideSettings($overrideSetting->toArray());
@@ -26,6 +26,8 @@ class Client
                 'json' => $payload->toArray()
             ]);
         }catch (\Exception $e) {
+
+            return null;
         }
 
         $this->response = $response->getBody()->getContents();
@@ -34,13 +36,27 @@ class Client
         return $this->data;
     }
 
-    public function get(string $endpoint): array
+    public function get(string $endpoint): ?\stdClass
     {
-        $response = $this->client->get($endpoint);
+        try {
+            $response = $this->client->get($endpoint);
+        }catch (\Exception $e) {
+            return null;
+        }
 
         $this->response = $response->getBody()->getContents();
         $this->data = json_decode($this->response);
 
+        return $this->data;
+    }
+
+    public function getResponse(): string
+    {
+        return $this->response;
+    }
+
+    public function getData(): \stdClass
+    {
         return $this->data;
     }
 }

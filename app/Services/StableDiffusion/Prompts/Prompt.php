@@ -18,7 +18,18 @@ class Prompt implements PromptInterface
 
     public function add(string $token): PromptInterface
     {
-        $this->tokens[] = $token;
+        $this->tokens[] = trim($token);
+
+        return $this;
+    }
+
+    public function addMany(string $tokens): PromptInterface
+    {
+        $tokens = explode(',', $tokens);
+        foreach ($tokens as $token)
+        {
+            $this->add($token);
+        }
 
         return $this;
     }
@@ -32,8 +43,8 @@ class Prompt implements PromptInterface
 
     public function loadFromFile(string $path): PromptInterface
     {
-        $tokens = $this->filesystem->get($path);
-        $this->tokens = array_merge(explode(',', $tokens));
+        $tokens = trim($this->filesystem->get($path), "\n");
+        $this->tokens = array_merge($this->tokens, explode(',', $tokens));
 
         return $this;
     }
