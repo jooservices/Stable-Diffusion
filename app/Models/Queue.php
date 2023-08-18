@@ -10,6 +10,7 @@ class Queue extends Model
     use HasFactory;
 
     protected $fillable = [
+        'uuid',
         'prompt',
         'negative_prompt',
         'sampler_name',
@@ -23,7 +24,7 @@ class Queue extends Model
         'cfg_scale',
         'denoising_strength',
         'completed',
-        'result'
+        'result',
     ];
 
     protected $casts = [

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('queues', function (Blueprint $table) {
             $table->id();
 
+            $table->uuid()->unique();
+
             $table->text('prompt');
             $table->text('negative_prompt')->nullable();
             $table->string('sampler_name')->default('Euler');

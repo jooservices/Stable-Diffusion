@@ -4,5 +4,5 @@ namespace App\Services\StableDiffusion;
 
 interface GeneratorInterface
 {
-    public function generate(): ?\stdClass;
+    public function generate(string $fileName, ?string $dir = null): ?\stdClass;
 }

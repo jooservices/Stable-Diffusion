@@ -5,6 +5,7 @@ namespace App\Console\Commands\StableDiffusion;
 use App\Models\Queue;
 use App\Services\StableDiffusionService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class GenerateQueues extends Command
 {
@@ -32,6 +33,7 @@ class GenerateQueues extends Command
         foreach ($models as $model)
         {
             Queue::create([
+                'uuid' => Str::orderedUuid(),
                 'prompt' => $this->option('prompt'),
                 'override_settings' => [
                     'sd_model_checkpoint' => $model,

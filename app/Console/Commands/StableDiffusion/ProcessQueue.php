@@ -46,7 +46,7 @@ class ProcessQueue extends Command
         $service->payload->loadFromArray($payload);
         $service->overrideSetting->loadFromArray($queue->override_settings);
 
-        if ($data = $service->generate($queue->id)) {
+        if ($data = $service->generate($queue->uuid)) {
             $queue->update([
                 'result' => json_decode($data->info, true),
                 'completed' => true,

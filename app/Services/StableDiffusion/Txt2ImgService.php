@@ -23,7 +23,7 @@ class Txt2ImgService implements GeneratorInterface
         $this->negativePrompt->loadFromFile('stable-diffusion/negative_prompts');
     }
 
-    public function generate(?string $dir = null): ?stdClass
+    public function generate(string $fileName, ?string $dir = null): ?stdClass
     {
         $this->payload->setPrompt($this->prompt);
         $this->payload->setNegativePrompt($this->negativePrompt);
@@ -33,6 +33,7 @@ class Txt2ImgService implements GeneratorInterface
         $filesystem = Storage::disk('local');
         $filesystem->makeDirectory('images');
         $path = 'images/';
+
         if($dir)
         {
             $filesystem->makeDirectory('images/' . $dir);
@@ -45,14 +46,10 @@ class Txt2ImgService implements GeneratorInterface
 
             foreach ($images as $index => $image)
             {
-                $fileName[] = $this->overrideSetting->get('sd_model_checkpoint');
-                $fileName[] = md5($this->prompt->toString() . $this->negativePrompt->toString());
-
                 $filesystem->put(
-                    $path . implode('_', $fileName) . '_' . $index . '.png',
+                    $path. $fileName . '_' . $index . '.png',
                     base64_decode($image)
                 );
-                $fileName = [];
             }
         }
 
