@@ -31,8 +31,11 @@ return new class extends Migration
             $table->float('cfg_scale')->default(6.5);
             $table->float('denoising_strength')->default(0.35);
 
-            $table->boolean('completed')->default(false);
             $table->json('result')->nullable();
+
+            $table->string('status')->default('init');
+            $table->dateTime('started_at')->nullable();
+            $table->dateTime('completed_at')->nullable();
 
             $table->timestamps();
         });

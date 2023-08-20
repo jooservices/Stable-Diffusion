@@ -32,24 +32,33 @@ class ProcessQueue extends Command
             return;
         }
 
-        $queue = Queue::where('completed', false)->first();
+        $queue = Queue::whereNull('started_at')
+            ->where('status', 'init')->first();
+
+        $queue->update([
+            'started_at' => now(),
+            'status' => 'processing'
+        ]);
 
         $payload = $queue->toArray();
-        unset($payload['override_settings']);
-        $service->prompt->addMany($queue->prompt);
+
+        $service->prompt->addManyValues($queue->prompt);
         if ($queue->negative_prompt) {
-            $service->negativePrompt->addMany($queue->negative_prompt);
+            $service->negativePrompt->addManyValues($queue->negative_prompt);
         }
         unset($payload['prompt']);
         unset($payload['negative_prompt']);
 
-        $service->payload->loadFromArray($payload);
-        $service->overrideSetting->loadFromArray($queue->override_settings);
+        $service->payload->loadSettingsFromArray($payload);
+        $service->overrideSetting->loadSettingsFromArray($queue->override_settings);
 
-        if ($data = $service->generate($queue->uuid)) {
+        $response = $service->generate($queue->uuid);
+
+        if ($response) {
             $queue->update([
-                'result' => json_decode($data->info, true),
-                'completed' => true,
+                'result' => $response->getInfo(),
+                'status' => 'completed',
+                'completed_at' => now(),
             ]);
         }
     }

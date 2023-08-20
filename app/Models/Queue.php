@@ -23,13 +23,22 @@ class Queue extends Model
         'height',
         'cfg_scale',
         'denoising_strength',
-        'completed',
         'result',
+        'status',
+        'started_at',
+        'completed_at',
     ];
 
     protected $casts = [
         'override_settings' => 'array',
         'result' => 'array',
-        'completed' => 'boolean',
+        'status' => 'string',
+        'started_at' => 'datetime',
+        'completed_at' => 'datetime',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
     ];
 }

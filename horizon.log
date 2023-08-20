@@ -5058,3 +5058,87 @@ Horizon started successfully.
   2023-08-17 18:46:21 App\Jobs\GenerateTxt2Img ....................... RUNNING
   2023-08-17 18:52:21 App\Jobs\GenerateTxt2Img ....................... 6m DONE
   2023-08-17 18:52:21 App\Jobs\GenerateTxt2Img ....................... 6m FAIL
+
+   RedisException 
+
+  Connection refused
+
+  at /media/joos/Data/Sites/Stable-Diffusion/vendor/laravel/framework/src/Illuminate/Redis/Connectors/PhpRedisConnector.php:161
+    157▕         if (version_compare(phpversion('redis'), '5.3.0', '>=') && ! is_null($context = Arr::get($config, 'context'))) {
+    158▕             $parameters[] = $context;
+    159▕         }
+    160▕ 
+  ➜ 161▕         $client->{$persistent ? 'pconnect' : 'connect'}(...$parameters);
+    162▕     }
+    163▕ 
+    164▕     /**
+    165▕      * Create a new redis cluster instance.
+
+      [2m+24 vendor frames [22m
+
+  25  /media/joos/Data/Sites/Stable-Diffusion/artisan:35
+      Illuminate\Foundation\Console\Kernel::handle()
+
+
+   RedisException 
+
+  Connection refused
+
+  at /media/joos/Data/Sites/Stable-Diffusion/vendor/laravel/framework/src/Illuminate/Redis/Connectors/PhpRedisConnector.php:161
+    157▕         if (version_compare(phpversion('redis'), '5.3.0', '>=') && ! is_null($context = Arr::get($config, 'context'))) {
+    158▕             $parameters[] = $context;
+    159▕         }
+    160▕ 
+  ➜ 161▕         $client->{$persistent ? 'pconnect' : 'connect'}(...$parameters);
+    162▕     }
+    163▕ 
+    164▕     /**
+    165▕      * Create a new redis cluster instance.
+
+      [2m+24 vendor frames [22m
+
+  25  /media/joos/Data/Sites/Stable-Diffusion/artisan:35
+      Illuminate\Foundation\Console\Kernel::handle()
+
+
+   RedisException 
+
+  Connection refused
+
+  at /media/joos/Data/Sites/Stable-Diffusion/vendor/laravel/framework/src/Illuminate/Redis/Connectors/PhpRedisConnector.php:161
+    157▕         if (version_compare(phpversion('redis'), '5.3.0', '>=') && ! is_null($context = Arr::get($config, 'context'))) {
+    158▕             $parameters[] = $context;
+    159▕         }
+    160▕ 
+  ➜ 161▕         $client->{$persistent ? 'pconnect' : 'connect'}(...$parameters);
+    162▕     }
+    163▕ 
+    164▕     /**
+    165▕      * Create a new redis cluster instance.
+
+      [2m+24 vendor frames [22m
+
+  25  /media/joos/Data/Sites/Stable-Diffusion/artisan:35
+      Illuminate\Foundation\Console\Kernel::handle()
+
+
+   RedisException 
+
+  Connection refused
+
+  at /media/joos/Data/Sites/Stable-Diffusion/vendor/laravel/framework/src/Illuminate/Redis/Connectors/PhpRedisConnector.php:161
+    157▕         if (version_compare(phpversion('redis'), '5.3.0', '>=') && ! is_null($context = Arr::get($config, 'context'))) {
+    158▕             $parameters[] = $context;
+    159▕         }
+    160▕ 
+  ➜ 161▕         $client->{$persistent ? 'pconnect' : 'connect'}(...$parameters);
+    162▕     }
+    163▕ 
+    164▕     /**
+    165▕      * Create a new redis cluster instance.
+
+      [2m+24 vendor frames [22m
+
+  25  /media/joos/Data/Sites/Stable-Diffusion/artisan:35
+      Illuminate\Foundation\Console\Kernel::handle()
+

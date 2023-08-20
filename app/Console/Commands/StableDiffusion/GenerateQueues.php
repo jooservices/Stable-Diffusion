@@ -3,7 +3,7 @@
 namespace App\Console\Commands\StableDiffusion;
 
 use App\Models\Queue;
-use App\Services\StableDiffusionService;
+use App\Services\StableDiffusion\StableDiffusionService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -14,14 +14,14 @@ class GenerateQueues extends Command
      *
      * @var string
      */
-    protected $signature = 'stable-diffusion:generate {--prompt=}';
+    protected $signature = 'stable-diffusion:generate {--prompt=} {--subprompt=} {--payload=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Generate queues for all models based on a prompt';
 
     /**
      * Execute the console command.
@@ -30,15 +30,32 @@ class GenerateQueues extends Command
     {
         $models = app(StableDiffusionService::class)->models();
 
-        foreach ($models as $model)
-        {
-            Queue::create([
+        collect(explode(',', $this->option('payload')))->map(function ($item, $key) use (&$payload) {
+            $data = explode('=', $item);
+            if (count($data) == 2) {
+                $payload[$data[0]] = $data[1];
+            }
+        });
+
+        if ($subPrompts = $this->option('subprompt')) {
+            $subPrompts = explode(',', $subPrompts);
+        }
+
+        foreach ($models as $model) {
+            if (isset($subPrompts)) {
+                foreach ($subPrompts as $subPrompt) {
+                    $payload['prompt'] = $this->option('prompt') . ',' . $subPrompt;
+                }
+            } else {
+                $payload['prompt'] = $this->option('prompt');
+            }
+
+            Queue::create(array_merge([
                 'uuid' => Str::orderedUuid(),
-                'prompt' => $this->option('prompt'),
                 'override_settings' => [
                     'sd_model_checkpoint' => $model,
                 ]
-            ]);
+            ], $payload));
         }
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Services\StableDiffusion\APIs;
 
 use App\Services\StableDiffusion\Client;
-use App\Services\StableDiffusion\Settings\OverrideSetting;
+use App\Services\StableDiffusion\Responses\Response;
+use App\Services\StableDiffusion\Responses\ResponseInterface;
+use App\Services\StableDiffusion\Responses\Txt2Img;
 use App\Services\StableDiffusion\Settings\Payload;
 
 class SdApi
@@ -14,41 +16,41 @@ class SdApi
     {
     }
 
-    public function get(string $endpoint): ?\stdClass
+    public function get(string $endpoint): ResponseInterface
     {
-        $this->client->get(self::SD_API_URL . $endpoint);
-
-        return $this->client->getData();
+        return new Response($this->client->get(self::SD_API_URL . $endpoint));
     }
 
-    public function post(string $endpoint, Payload $payload, ?OverrideSetting $overrideSetting): ?\stdClass
+    public function post(string $endpoint, Payload $payload): ResponseInterface
     {
-        $this->client->post(
-            self::SD_API_URL . $endpoint,
-            $payload,
-            $overrideSetting
+        return new Response(
+            $this->client->post(
+                self::SD_API_URL . $endpoint,
+                $payload
+            )
         );
-
-        return $this->client->getData();
     }
 
-    public function txt2img(Payload $payload, ?OverrideSetting $overrideSetting): ?\stdClass
+    public function txt2img(Payload $payload): ResponseInterface
     {
-        return $this->post('txt2img', $payload, $overrideSetting);
+        $response = $this->post('txt2img', $payload);
+
+        return new Txt2Img($response->getResponse());
     }
 
-    public function options(): ?\stdClass
+    public function options(): ResponseInterface
     {
         return $this->get('options');
     }
 
-    public function progress()
+    public function progress(): ResponseInterface
     {
-        return $this->client->get(self::SD_API_URL . 'progress?skip_current_image=true');
+        return $this->get('progress?skip_current_image=true');
     }
 
     public function isCompleted(): bool
     {
-        return $this->progress()->progress === 0.0;
+        $progress = $this->progress()->getData()->progress;
+        return $progress === 0.0 || $progress === 0;
     }
 }

@@ -2,65 +2,42 @@
 
 namespace App\Services\StableDiffusion\Prompts;
 
+use App\Services\StableDiffusion\Interfaces\HasValuesInterface;
+use App\Services\StableDiffusion\Prompts\Providers\Quality;
+use App\Services\StableDiffusion\Traits\HasValues;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Storage;
 
-class Prompt implements PromptInterface
+/**
+ * @method self quality()
+ */
+class Prompt implements HasValuesInterface
 {
-    protected array $tokens = [];
+    use HasValues;
 
-    private Filesystem $filesystem;
-
-    public function __construct()
+    public function __construct(private Filesystem $filesystem)
     {
-        $this->filesystem = Storage::disk('local');
+        $this->bootHasValues();
     }
 
-    public function add(string $token): PromptInterface
+    public function __call(string $name, array $arguments): self
     {
-        $this->tokens[] = trim($token);
-
-        return $this;
-    }
-
-    public function addMany(string $tokens): PromptInterface
-    {
-        $tokens = explode(',', $tokens);
-        foreach ($tokens as $token)
-        {
-            $this->add($token);
+        $provider = $this->getProvider($name);
+        if (!$provider) {
+            throw new \BadMethodCallException("Method {$name} does not exist.");
         }
 
-        return $this;
-    }
-
-    public function remove(string $token): PromptInterface
-    {
-        $this->tokens[] = $token;
+        $this->addValue(app($provider)->getTokens());
 
         return $this;
     }
 
-    public function loadFromFile(string $path): PromptInterface
+    private function getProvider(string $provider): ?string
     {
-        $tokens = trim($this->filesystem->get($path), "\n");
-        $this->tokens = array_merge($this->tokens, explode(',', $tokens));
+        $className = 'App\\Services\\StableDiffusion\\Prompts\\Providers\\' . ucfirst($provider);
+        if (class_exists($className)) {
+            return $className;
+        }
 
-        return $this;
-    }
-
-    public function getTokens(): array
-    {
-        return array_unique($this->tokens);
-    }
-
-    public function toJson(): string
-    {
-        return json_encode( $this->getTokens());
-    }
-
-    public function toString(): string
-    {
-        return implode(',', $this->getTokens());
+        return null;
     }
 }

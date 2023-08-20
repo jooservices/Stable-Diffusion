@@ -2,61 +2,35 @@
 
 namespace App\Services\StableDiffusion;
 
-use App\Services\StableDiffusion\Settings\OverrideSetting;
 use App\Services\StableDiffusion\Settings\Payload;
 
 class Client
 {
-    private string $response;
-
-    private ?\stdClass $data;
-
-    public function __construct(private \GuzzleHttp\Client $client)
+    public function __construct(private readonly \GuzzleHttp\Client $client)
     {
     }
 
-    public function post(string $endpoint, Payload $payload, ?OverrideSetting $overrideSetting = null): ?\stdClass
+    public function post(string $endpoint, Payload $payload): ?string
     {
-        if ($overrideSetting) {
-            $payload->overrideSettings($overrideSetting->toArray());
-        }
-
         try {
             $response = $this->client->post($endpoint, [
-                'json' => $payload->toArray()
+                'json' => $payload->getSettings()
             ]);
-        }catch (\Exception $e) {
-
+        } catch (\Exception $e) {
             return null;
         }
 
-        $this->response = $response->getBody()->getContents();
-        $this->data = json_decode($this->response);
-
-        return $this->data;
+        return $response->getBody()->getContents();
     }
 
-    public function get(string $endpoint): ?\stdClass
+    public function get(string $endpoint): ?string
     {
         try {
             $response = $this->client->get($endpoint);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return null;
         }
 
-        $this->response = $response->getBody()->getContents();
-        $this->data = json_decode($this->response);
-
-        return $this->data;
-    }
-
-    public function getResponse(): string
-    {
-        return $this->response;
-    }
-
-    public function getData(): \stdClass
-    {
-        return $this->data;
+        return $response->getBody()->getContents();
     }
 }

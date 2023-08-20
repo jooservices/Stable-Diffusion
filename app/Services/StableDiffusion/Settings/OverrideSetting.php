@@ -2,11 +2,21 @@
 
 namespace App\Services\StableDiffusion\Settings;
 
-class OverrideSetting extends BaseSetting
+use App\Services\StableDiffusion\Interfaces\HasSettingInterface;
+use App\Services\StableDiffusion\Traits\HasSettings;
+
+class OverrideSetting implements HasSettingInterface
 {
+    use HasSettings;
+
+    public function __construct()
+    {
+        $this->bootHasSettings();
+    }
+
     public function setModelCheckPoint(string $model): self
     {
-        $this->set('sd_model_checkpoint', $model);
+        $this->addSetting('sd_model_checkpoint', $model);
 
         return $this;
     }

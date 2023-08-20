@@ -2,43 +2,41 @@
 
 namespace App\Services\StableDiffusion\Settings;
 
-use App\Services\StableDiffusion\Prompts\PromptInterface;
+use App\Services\StableDiffusion\Interfaces\HasSettingInterface;
+use App\Services\StableDiffusion\Prompts\Prompt;
+use App\Services\StableDiffusion\Traits\HasSettings;
 
-class Payload extends BaseSetting
+class Payload implements HasSettingInterface
 {
+    use HasSettings;
+
     public function __construct()
     {
-        $this->loadDefault();
+        $this->bootHasSettings();
+        $this->addSetting('sampler_name', 'Euler')
+            ->addSetting('seed', -1)
+            ->addSetting('width', 768)
+            ->addSetting('height', 768)
+            ->addSetting('send_images', true)
+            ->addSetting('save_images', false)
+            ->addSetting('steps', 20)
+            ->addSetting('restore_faces', true)
+            ->addSetting('cfg_scale', 6.5)
+            ->addSetting('enable_hr', true)
+            ->addSetting('hr_upscaler', 'Latent')
+            ->addSetting('denoising_strength', 0.35);
     }
 
-    public function loadDefault()
+    public function setPrompt(Prompt $prompt): self
     {
-        $this->settings = [
-            'sampler_name' => 'Euler',
-            'seed' => -1,
-            'width' => 768,
-            'height' => 768,
-            'send_images' => true,
-            'save_images' => false,
-            'steps' => 150,
-            'restore_faces' => true,
-            'cfg_scale' => 6.5,
-            'enable_hr' => true,
-            'hr_upscaler' => 'Latent',
-            'denoising_strength' => 0.35,
-        ];
-    }
-
-    public function setPrompt(PromptInterface $prompt): self
-    {
-        $this->set('prompt', $prompt->toString());
+        $this->addSetting('prompt', $prompt->getValuesString());
 
         return $this;
     }
 
-    public function setNegativePrompt(PromptInterface $prompt): self
+    public function setNegativePrompt(Prompt $prompt): self
     {
-        $this->set('negative_prompt', $prompt->toString());
+        $this->addSetting('negative_prompt', $prompt->getValuesString());
 
         return $this;
     }
@@ -51,70 +49,70 @@ class Payload extends BaseSetting
             $steps = 1;
         }
 
-        $this->set('steps', $steps);
+        $this->addSetting('steps', $steps);
 
         return $this;
     }
 
     public function enableHr(): self
     {
-        $this->enable('enable_hr');
+        $this->enableSetting('enable_hr');
 
         return $this;
     }
 
     public function disableHr(): self
     {
-        $this->disable('enable_hr');
+        $this->disableSetting('enable_hr');
 
         return $this;
     }
 
     public function enableRestoreFaces(): self
     {
-        $this->enable('restore_faces');
+        $this->enableSetting('restore_faces');
 
         return $this;
     }
 
     public function disableRestoreFaces(): self
     {
-        $this->disable('restore_faces');
+        $this->disableSetting('restore_faces');
 
         return $this;
     }
 
     public function enableSendImages(): self
     {
-        $this->enable('send_images');
+        $this->enableSetting('send_images');
 
         return $this;
     }
 
     public function disableSendImages(): self
     {
-        $this->disable('send_images');
+        $this->disableSetting('send_images');
 
         return $this;
     }
 
     public function enableSaveImages(): self
     {
-        $this->enable('save_images');
+        $this->enableSetting('save_images');
 
         return $this;
     }
 
     public function disableSaveImages(): self
     {
-        $this->disable('save_images');
+        $this->disableSetting('save_images');
 
         return $this;
     }
 
-    public function overrideSettings(array $settings)
+    public function overrideSettings(OverrideSetting $settings)
     {
-        $this->set('override_settings', $settings);
+        $this->addSetting('override_settings', $settings->getSettings());
 
         return $this;
     }
