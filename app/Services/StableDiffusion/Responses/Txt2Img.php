@@ -16,7 +16,7 @@ class Txt2Img extends Response
 
         $images = [];
         foreach ($this->getImages() as $index => $image) {
-            $imageFile = 'images/' . $fileName . '_' . $index . '.png';
+            $imageFile = 'images/'.$fileName.'_'.$index.'.png';
             $images[] = $imageFile;
 
             $this->filesystem->put(

@@ -11,18 +11,7 @@ class Queue extends Model
 
     protected $fillable = [
         'uuid',
-        'prompt',
-        'negative_prompt',
-        'sampler_name',
-        'hr_upscaler',
-        'override_settings',
-        'model_checkpoint',
-        'seed',
-        'steps',
-        'width',
-        'height',
-        'cfg_scale',
-        'denoising_strength',
+        'payload',
         'result',
         'status',
         'started_at',
@@ -30,9 +19,8 @@ class Queue extends Model
     ];
 
     protected $casts = [
-        'override_settings' => 'array',
+        'payload' => 'array',
         'result' => 'array',
-        'status' => 'string',
         'started_at' => 'datetime',
         'completed_at' => 'datetime',
     ];

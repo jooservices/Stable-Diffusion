@@ -13,7 +13,7 @@ class SdApiTest extends TestCase
         $this->instance(Client::class, \Mockery::mock(Client::class, function ($mock) {
             $mock->shouldReceive('get')
                 ->once()
-                ->with(SdApi::SD_API_URL . 'progress?skip_current_image=true')
+                ->with(SdApi::SD_API_URL.'progress?skip_current_image=true')
                 ->andReturn('{
   "progress": 0,
   "eta_relative": 0,

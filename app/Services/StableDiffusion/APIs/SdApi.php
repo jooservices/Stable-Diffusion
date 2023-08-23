@@ -18,14 +18,14 @@ class SdApi
 
     public function get(string $endpoint): ResponseInterface
     {
-        return new Response($this->client->get(self::SD_API_URL . $endpoint));
+        return new Response($this->client->get(self::SD_API_URL.$endpoint));
     }
 
     public function post(string $endpoint, Payload $payload): ResponseInterface
     {
         return new Response(
             $this->client->post(
-                self::SD_API_URL . $endpoint,
+                self::SD_API_URL.$endpoint,
                 $payload
             )
         );
@@ -51,6 +51,7 @@ class SdApi
     public function isCompleted(): bool
     {
         $progress = $this->progress()->getData()->progress;
+
         return $progress === 0.0 || $progress === 0;
     }
 }

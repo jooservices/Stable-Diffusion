@@ -2,12 +2,13 @@
 
 namespace App\Services\StableDiffusion\Responses;
 
+use stdClass;
+
 class Response implements ResponseInterface
 {
     public function __construct(
         protected readonly ?string $response,
-    )
-    {
+    ) {
     }
 
     public function getResponse(): ?string
@@ -15,7 +16,7 @@ class Response implements ResponseInterface
         return $this->response;
     }
 
-    public function getData(): ?\stdClass
+    public function getData(): ?stdClass
     {
         return json_decode($this->response);
     }

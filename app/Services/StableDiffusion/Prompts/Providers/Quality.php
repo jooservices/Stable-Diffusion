@@ -2,10 +2,17 @@
 
 namespace App\Services\StableDiffusion\Prompts\Providers;
 
-class Quality implements ProviderInterface
+class Quality extends AbstractProvider
 {
-    public function getTokens(): string
-    {
-        return '(masterpiece, 8k uhd, high-res,HDR, extreme detailed, intricate details, best quality, professional, highly detailed)';
-    }
+    protected array $tokens = [
+        'masterpiece',
+        '8k uhd',
+        'high-res',
+        'HDR',
+        'extreme detailed',
+        'intricate details',
+        'best quality',
+        'professional',
+        'highly detailed',
+    ];
 }

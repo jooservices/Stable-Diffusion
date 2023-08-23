@@ -9,9 +9,15 @@ class Prompt extends Model
 {
     use HasFactory;
 
-    public $fillable = [
+    protected $fillable = [
+        'group',
+        'key',
         'prompt',
         'negative_prompt',
-        'status',
+        'extra',
+    ];
+
+    protected $casts = [
+        'extra' => 'array',
     ];
 }

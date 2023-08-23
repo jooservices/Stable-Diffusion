@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,24 +15,12 @@ return new class extends Migration
 
             $table->uuid()->unique();
 
-            $table->text('prompt');
-            $table->text('negative_prompt')->nullable();
-            $table->string('sampler_name')->default('Euler');
-            $table->string('hr_upscaler')->default('Latent');
-
-            $table->json('override_settings')->nullable();
-
-            $table->integer('seed')->default(-1);
-            $table->integer('steps')->default(150);
-            $table->integer('width')->default(768);
-            $table->integer('height')->default(768);
-
-            $table->float('cfg_scale')->default(6.5);
-            $table->float('denoising_strength')->default(0.35);
+            $table->json('payload');
 
             $table->json('result')->nullable();
 
             $table->string('status')->default('init');
+
             $table->dateTime('started_at')->nullable();
             $table->dateTime('completed_at')->nullable();
 

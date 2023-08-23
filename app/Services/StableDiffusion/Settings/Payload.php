@@ -2,6 +2,7 @@
 
 namespace App\Services\StableDiffusion\Settings;
 
+use App\Models\Setting;
 use App\Services\StableDiffusion\Interfaces\HasSettingInterface;
 use App\Services\StableDiffusion\Prompts\Prompt;
 use App\Services\StableDiffusion\Traits\HasSettings;
@@ -13,18 +14,10 @@ class Payload implements HasSettingInterface
     public function __construct()
     {
         $this->bootHasSettings();
-        $this->addSetting('sampler_name', 'Euler')
-            ->addSetting('seed', -1)
-            ->addSetting('width', 768)
-            ->addSetting('height', 768)
-            ->addSetting('send_images', true)
-            ->addSetting('save_images', false)
-            ->addSetting('steps', 20)
-            ->addSetting('restore_faces', true)
-            ->addSetting('cfg_scale', 6.5)
-            ->addSetting('enable_hr', true)
-            ->addSetting('hr_upscaler', 'Latent')
-            ->addSetting('denoising_strength', 0.35);
+        $payloadSettings = Setting::where('group', 'payload')->get();
+        foreach ($payloadSettings as $payloadSetting) {
+            $this->addSetting($payloadSetting->key, $payloadSetting->value);
+        }
     }
 
     public function setPrompt(Prompt $prompt): self

@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 trait HasSettings
 {
     protected Collection $settings;
+
     protected function bootHasSettings()
     {
         $this->settings = collect();

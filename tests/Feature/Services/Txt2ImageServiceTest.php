@@ -6,5 +6,4 @@ use Tests\TestCase;
 
 class Txt2ImageServiceTest extends TestCase
 {
-
 }

@@ -3,6 +3,7 @@
 namespace App\Services\StableDiffusion;
 
 use App\Services\StableDiffusion\Settings\Payload;
+use Exception;
 
 class Client
 {
@@ -14,9 +15,9 @@ class Client
     {
         try {
             $response = $this->client->post($endpoint, [
-                'json' => $payload->getSettings()
+                'json' => $payload->getSettings(),
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
 
@@ -27,7 +28,7 @@ class Client
     {
         try {
             $response = $this->client->get($endpoint);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
 
